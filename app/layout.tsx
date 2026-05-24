@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
+// @ts-ignore: Global CSS import type declarations are handled by Next.js
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -66,6 +68,11 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} scroll-smooth`}>
       <body className="antialiased bg-white text-gray-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 min-h-screen flex flex-col" suppressHydrationWarning>
         {children}
+        <Script
+          src="https://reacly-ui.vercel.app/widget.js"
+          data-site="b7270cdf-16f0-47e1-92a9-e833528472da"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
