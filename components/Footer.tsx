@@ -23,8 +23,8 @@ export default function Footer() {
         </div>
         
         <div className="flex items-center gap-6">
-          <Link href="#" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Twitter</Link>
-          <Link href="#" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Product Hunt</Link>
+          <Link href="https://twitter.com/reacly" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Twitter</Link>
+          <Link href="https://producthunt.com" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Product Hunt</Link>
           <Link href="#" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Privacy</Link>
           <Link href="#" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Terms</Link>
         </div>

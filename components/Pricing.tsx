@@ -14,10 +14,10 @@ export default function Pricing() {
     },
     {
       name: 'Starter',
-      price: '$3',
+      price: '$4',
       period: 'per month',
       features: ['1 website', 'Unlimited responses', 'Remove branding', 'Full history', 'Export data'],
-      cta: 'Start 14-day free trial',
+      cta: 'Get started',
       highlight: true
     },
     {
@@ -25,7 +25,7 @@ export default function Pricing() {
       price: '$9',
       period: 'per month',
       features: ['Up to 5 websites', 'Unlimited responses', 'Remove branding', 'Slack notifications', 'Custom questions'],
-      cta: 'Start 14-day free trial',
+      cta: 'Get started',
       highlight: false
     }
   ];
@@ -103,7 +103,7 @@ export default function Pricing() {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="text-center text-sm font-medium text-gray-500 mt-12"
         >
-          All paid plans include a 14-day free trial. No credit card required to start.
+          Cancel or change your plan at any time. Secure payment via Stripe.
         </motion.p>
       </div>
     </section>
