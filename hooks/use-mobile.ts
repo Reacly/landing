@@ -7,11 +7,11 @@ export function useIsMobile() {
 
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-
+    
     // Set initial value immediately without triggering re-render if it matches
     const getIsMobile = () => window.innerWidth < MOBILE_BREAKPOINT
     setIsMobile(getIsMobile())
-
+    
     const onChange = () => {
       setIsMobile(getIsMobile())
     }

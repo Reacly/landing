@@ -1,341 +1,222 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
-import { motion, useMotionValue, useTransform, animate } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { motion } from 'motion/react';
+import { usePostHog } from 'posthog-js/react';
+import { useState } from 'react';
 
 export default function Hero() {
-  const [step, setStep] = useState<'rating' | 'comment' | 'thanks'>('rating');
+  const posthog = usePostHog();
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
-  const [comment, setComment] = useState('');
-
-  // Live ticker — counts up from a base number
-  const count = useMotionValue(2847);
-  const rounded = useTransform(count, (latest) => Math.round(latest).toLocaleString());
-
-  useEffect(() => {
-    const t = setInterval(() => {
-      animate(count, count.get() + Math.floor(Math.random() * 3) + 1, {
-        duration: 1.2,
-        ease: 'easeOut',
-      });
-    }, 3500);
-    return () => clearInterval(t);
-  }, [count]);
-
-  // Auto-cycle through widget states after 8s of inactivity
-  useEffect(() => {
-    if (step === 'thanks') {
-      const t = setTimeout(() => {
-        setStep('rating');
-        setSelectedRating(null);
-        setComment('');
-      }, 5000);
-      return () => clearTimeout(t);
-    }
-  }, [step]);
-
-  const emojis = ['😞', '😐', '🙂', '😊', '🤩'];
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   return (
-    <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Animated background — soft gradient orbs */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140%] h-full bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.08)_0%,_transparent_50%)]" />
-        <div className="absolute top-20 -left-20 w-96 h-96 bg-emerald-200/30 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-40 -right-20 w-96 h-96 bg-teal-200/30 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808010_1px,transparent_1px),linear-gradient(to_bottom,#80808010_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+    <section className="relative overflow-hidden w-full pt-32 pb-20">
+      {/* Modern Background Mesh & Floating Elements */}
+      <div className="absolute inset-0 -z-10 h-full w-full bg-mesh"></div>
+      
+      {/* Floating Elements (Background) */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-[10%] text-4xl animate-float opacity-40">😞</div>
+        <div className="absolute top-40 right-[15%] text-5xl animate-float-delayed opacity-30">🤩</div>
+        <div className="absolute bottom-20 left-[40%] text-3xl animate-float opacity-50">😐</div>
+        <div className="absolute bottom-40 right-[5%] text-4xl animate-float-delayed opacity-40">👍</div>
+        <div className="absolute top-10 right-[40%] w-12 h-12 bg-emerald-500 rounded-full blur-3xl opacity-20"></div>
+        <div className="absolute bottom-10 left-[20%] w-32 h-32 bg-emerald-400 rounded-full blur-3xl opacity-20"></div>
       </div>
-
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-8 relative">
-        {/* Left column */}
-        <div className="flex-1 text-center lg:text-left relative">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-gray-200 mb-8 mx-auto lg:mx-0 shadow-sm"
-          >
-            <div className="pulse-dot" />
-            <span className="text-sm font-medium text-gray-700">
-              <motion.span>{rounded}</motion.span> ratings collected this week
-            </span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-[60px] font-bold text-gray-900 tracking-tight leading-[1.05] mb-6"
-          >
-            Your visitors are{' '}
-            <span className="relative inline-block">
-              <span className="relative z-10 text-emerald-600">leaving</span>
-              <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 100 8" preserveAspectRatio="none">
-                <motion.path
-                  d="M0,4 Q25,0 50,4 T100,4"
-                  stroke="#10B981"
-                  strokeWidth="2"
-                  fill="none"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 1.5, delay: 0.5 }}
-                />
-              </svg>
-            </span>
-            .
-            <br />
-            Find out why before they go.
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
-          >
-            One script tag. Zero setup. A delightful widget that collects honest feedback from every page —
-            so you stop guessing what&apos;s broken and start fixing what matters.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center gap-3 justify-center lg:justify-start"
-          >
-            <Link
-              href="#waitlist"
-              className="group w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-7 py-3.5 rounded-lg font-medium text-base shadow-md shadow-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] inline-flex items-center justify-center gap-2"
-            >
-              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-              Get early access — free
-            </Link>
-            <Link
-              href="#demo"
-              className="w-full sm:w-auto px-6 py-3.5 text-gray-700 hover:text-gray-900 font-medium transition-colors inline-flex items-center justify-center gap-2 group border border-gray-200 hover:border-gray-300 rounded-lg bg-white"
-            >
-              See it in action
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </motion.div>
-
-          {/* Social proof row */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-10 pt-8 border-t border-gray-200/70 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full border-2 border-white bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center text-xs font-semibold text-emerald-900"
-                  >
-                    {['J', 'M', 'A', 'S', 'K'][i - 1]}
-                  </div>
-                ))}
-              </div>
-              <p className="text-sm text-gray-600">
-                <span className="font-semibold text-gray-900">47 makers</span> already on the waitlist
-              </p>
-            </div>
-            <div className="hidden sm:block w-px h-4 bg-gray-200" />
-            <div className="flex items-center gap-1.5">
-              <span className="text-amber-400 text-base">★★★★★</span>
-              <span className="text-sm text-gray-600 font-medium">4.9 avg from beta users</span>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Right column — Live demo */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex-1 w-full max-w-lg lg:max-w-none"
+      
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-8 relative z-10">
+      
+      <div className="flex-1 text-center lg:text-left relative">
+        {/* <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-200 mb-8 mx-auto lg:mx-0"
         >
-          <div className="relative">
-            {/* Floating dashboard metric card */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1, duration: 0.5 }}
-              className="absolute -top-6 -left-2 lg:-left-10 z-20 bg-white rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-gray-100 p-3 w-44 animate-float"
-              style={{ animationDelay: '1s' }}
-            >
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Avg Rating</span>
-                <span className="text-[10px] text-emerald-600 font-semibold">↑ 0.4</span>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-gray-900">4.8</span>
-                <span className="text-xs text-gray-400">/5</span>
-              </div>
-              <div className="mt-2 flex gap-1">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div
-                    key={i}
-                    className="flex-1 h-1 rounded-full bg-emerald-500"
-                    style={{ opacity: i <= 4 ? 1 : 0.3 }}
-                  />
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Floating insight card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.3, duration: 0.5 }}
-              className="absolute -bottom-6 -right-2 lg:-right-10 z-20 bg-white rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-gray-100 p-3 w-52 animate-float"
-              style={{ animationDelay: '2.5s' }}
-            >
-              <div className="flex items-center gap-2 mb-1.5">
-                <div className="w-6 h-6 bg-emerald-500 rounded-md flex items-center justify-center">
-                  <Sparkles className="w-3 h-3 text-white" />
-                </div>
-                <span className="text-[10px] font-semibold text-gray-900 uppercase tracking-wider">AI Insight</span>
-              </div>
-              <p className="text-xs text-gray-700 leading-relaxed">
-                Pricing page rated 2.1 — comparison feels unclear
-              </p>
-            </motion.div>
-
-            {/* Main mock browser */}
-            <div className="relative rounded-2xl border border-gray-200 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.08)] aspect-[4/3] flex flex-col overflow-hidden">
-              {/* Browser header */}
-              <div className="h-10 border-b border-gray-100 bg-gray-50 flex items-center px-3 gap-2">
-                <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                </div>
-                <div className="ml-3 flex-1 max-w-xs h-5 bg-white border border-gray-200 rounded-md flex items-center px-2">
-                  <span className="text-[9px] text-gray-400 font-mono">acme.co/pricing</span>
-                </div>
-                <div className="text-[9px] text-gray-300 font-mono">→ powered by Reacly</div>
-              </div>
-
-              {/* Mock website content */}
-              <div className="p-6 flex-1 bg-gradient-to-br from-white via-gray-50/30 to-emerald-50/20 relative overflow-hidden">
-                <div className="max-w-[75%]">
-                  <div className="w-10 h-10 bg-gray-900 rounded-lg mb-4 flex items-center justify-center">
-                    <div className="w-4 h-4 border-2 border-white rounded-sm" />
-                  </div>
-                  <div className="h-3 w-3/4 bg-gray-200 rounded mb-2" />
-                  <div className="h-3 w-1/2 bg-gray-200 rounded mb-5" />
-                  <div className="flex gap-2">
-                    <div className="w-24 h-24 bg-white border border-gray-200 rounded-lg shadow-sm p-2">
-                      <div className="w-8 h-2 bg-gray-200 rounded mb-1.5" />
-                      <div className="w-10 h-3 bg-gray-900 rounded mb-2" />
-                      <div className="space-y-1">
-                        <div className="w-full h-1 bg-gray-100 rounded" />
-                        <div className="w-4/5 h-1 bg-gray-100 rounded" />
-                      </div>
-                    </div>
-                    <div className="w-24 h-24 bg-white border-2 border-emerald-500 rounded-lg shadow-sm p-2 relative">
-                      <div className="absolute -top-1.5 -right-1.5 px-1.5 py-0.5 bg-emerald-500 text-white text-[7px] font-bold rounded-full">POPULAR</div>
-                      <div className="w-8 h-2 bg-gray-200 rounded mb-1.5" />
-                      <div className="w-10 h-3 bg-gray-900 rounded mb-2" />
-                      <div className="space-y-1">
-                        <div className="w-full h-1 bg-gray-100 rounded" />
-                        <div className="w-4/5 h-1 bg-gray-100 rounded" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating widget — interactive */}
-              <motion.div
-                key={step}
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                className="absolute bottom-5 right-5 w-[280px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-gray-100 p-4"
-              >
-                {step === 'rating' && (
-                  <>
-                    <p className="text-sm font-semibold text-gray-900 mb-3 text-center">
-                      How was this page?
-                    </p>
-                    <div className="flex justify-between gap-1 mb-1">
-                      {emojis.map((e, i) => (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            setSelectedRating(i + 1);
-                            setTimeout(() => setStep('comment'), 400);
-                          }}
-                          className={`flex-1 aspect-square rounded-xl flex items-center justify-center text-2xl transition-all duration-200 ${
-                            selectedRating === i + 1
-                              ? 'bg-emerald-100 scale-110 ring-2 ring-emerald-500'
-                              : 'hover:bg-gray-50 hover:scale-110'
-                          }`}
-                        >
-                          {e}
-                        </button>
-                      ))}
-                    </div>
-                    <p className="text-[10px] text-gray-400 text-center mt-2">
-                      ↑ Try clicking one
-                    </p>
-                  </>
-                )}
-
-                {step === 'comment' && (
-                  <>
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-xl">
-                        {emojis[(selectedRating ?? 3) - 1]}
-                      </div>
-                      <p className="text-sm font-semibold text-gray-900">
-                        Tell us why — optional
-                      </p>
-                    </div>
-                    <input
-                      autoFocus
-                      type="text"
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      placeholder="What stood out?"
-                      className="w-full text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mb-2 text-gray-800 outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
-                    />
-                    <button
-                      onClick={() => setStep('thanks')}
-                      className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg py-2 text-sm font-medium transition-all active:scale-[0.98]"
-                    >
-                      Send feedback →
-                    </button>
-                  </>
-                )}
-
-                {step === 'thanks' && (
-                  <motion.div
-                    initial={{ scale: 0.9 }}
-                    animate={{ scale: 1 }}
-                    className="py-3 text-center"
-                  >
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: 'spring', stiffness: 200, damping: 12 }}
-                      className="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center text-2xl mx-auto mb-2"
-                    >
-                      ✓
-                    </motion.div>
-                    <p className="font-semibold text-gray-900 text-sm">Thanks! That helps.</p>
-                    <p className="text-xs text-gray-500 mt-0.5">You just made a product better.</p>
-                  </motion.div>
-                )}
-              </motion.div>
+          <div className="pulse-dot"></div>
+          <span className="text-sm font-medium text-gray-700">Now in early access</span>
+        </motion.div> */}
+        
+        <motion.h1 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-gray-900 tracking-tight leading-[1.1] mb-6"
+        >
+          Know what your visitors <span className="text-emerald-500">actually think</span>
+        </motion.h1>
+        
+        <motion.p 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+        >
+          A lightweight feedback widget that helps you understand exactly what your users need. Paste a single script tag to start collecting insights on any platform in minutes.
+        </motion.p>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
+        >
+          <Link 
+            href={`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/sign-up`} 
+            onClick={() => posthog?.capture('clicked_get_started', { location: 'hero' })}
+            className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3.5 rounded-lg font-medium transition-transform hover:scale-[1.02] active:scale-95 text-center text-lg shadow-sm"
+          >
+            Get Started
+          </Link>
+          <Link href="#how-it-works" className="w-full sm:w-auto px-6 py-3.5 text-gray-600 hover:text-gray-900 font-medium transition-colors inline-flex items-center justify-center gap-2 group">
+            See how it works
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
+        
+        {/* <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="mt-8 pt-8 border-t border-gray-100 flex items-center justify-center lg:justify-start gap-4"
+        >
+          <div className="flex -space-x-3 hover:space-x-[-8px] transition-all duration-300">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Image key={i} src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User maker" width={40} height={40} className="w-10 h-10 rounded-full border-2 border-white bg-gray-100" referrerPolicy="no-referrer" />
+            ))}
+          </div>
+          <p className="text-sm text-gray-600 font-medium cursor-default">Join 47 indie makers already on the waitlist</p>
+        </motion.div> */}
+      </div>
+      
+      <motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="flex-1 w-full max-w-lg lg:max-w-none hidden md:block relative z-10"
+      >
+        <div className="relative rounded-2xl glass-panel aspect-[4/3] flex flex-col overflow-hidden group">
+          {/* Mock Browser Header */}
+          <div className="h-12 border-b border-white/20 bg-white/40 flex items-center px-4 gap-2 backdrop-blur-md">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-400"></div>
+              <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+              <div className="w-3 h-3 rounded-full bg-green-400"></div>
+            </div>
+            <div className="ml-4 flex-1 max-w-xs h-6 bg-white/60 border border-white/40 rounded-md flex items-center px-2">
+              <span className="text-[10px] text-gray-500 font-mono tracking-wider">acme.co/pricing</span>
             </div>
           </div>
-        </motion.div>
+          
+          {/* Mock Website Content - Realistic Dashboard */}
+          <div className="flex-1 bg-gray-50 relative overflow-hidden flex">
+            {/* Sidebar Mockup */}
+            <div className="w-16 sm:w-20 bg-white border-r border-gray-200 flex flex-col items-center py-6 gap-6 z-10 shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-gray-900 mb-4 flex items-center justify-center text-white font-bold text-sm shadow-sm">R</div>
+              <div className="w-8 h-8 rounded-md bg-emerald-100 flex items-center justify-center">
+                <div className="w-4 h-4 rounded-sm bg-emerald-500"></div>
+              </div>
+              <div className="w-8 h-8 rounded-md hover:bg-gray-100 flex items-center justify-center transition-colors">
+                <div className="w-4 h-1 rounded-full bg-gray-300"></div>
+              </div>
+              <div className="w-8 h-8 rounded-md hover:bg-gray-100 flex items-center justify-center transition-colors">
+                <div className="w-4 h-4 rounded-full border-2 border-gray-300"></div>
+              </div>
+            </div>
+            
+            {/* Main Content Mockup */}
+            <div className="p-6 sm:p-8 flex-1">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 tracking-tight">Overview</h2>
+                  <p className="text-xs font-medium text-gray-500 mt-1">Analytics for reacly.io</p>
+                </div>
+                <div className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 transition-colors rounded-lg hidden sm:flex items-center justify-center text-white text-xs font-semibold shadow-sm cursor-pointer">
+                  Export Report
+                </div>
+              </div>
+              
+              {/* Stats Row */}
+              <div className="flex gap-4 mb-6">
+                <div className="flex-1 bg-white p-4 rounded-xl border border-gray-200 shadow-sm transition-transform hover:-translate-y-0.5 duration-200">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Total Responses</p>
+                  <p className="text-2xl font-bold text-gray-900">1,294</p>
+                  <p className="text-xs font-medium text-emerald-500 mt-1 flex items-center gap-1">
+                    <span className="text-[10px]">↗</span> +12.5%
+                  </p>
+                </div>
+                <div className="flex-1 bg-white p-4 rounded-xl border border-gray-200 shadow-sm transition-transform hover:-translate-y-0.5 duration-200">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Feedback Score</p>
+                  <p className="text-2xl font-bold text-gray-900">4.8</p>
+                  <p className="text-xs font-medium text-emerald-500 mt-1 flex items-center gap-1">
+                    <span className="text-[10px]">↗</span> +2.1%
+                  </p>
+                </div>
+              </div>
+
+              {/* Chart Area */}
+              <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm h-32 flex flex-col justify-end group cursor-pointer relative overflow-hidden">
+                 <div className="flex items-center justify-between mb-auto relative z-10">
+                   <p className="text-xs font-semibold text-gray-800">Weekly Engagement</p>
+                   <p className="text-[10px] text-gray-400 font-medium">Last 7 days</p>
+                 </div>
+                 <div className="flex items-end gap-2 h-16 w-full max-w-[80%] mt-4 relative z-0">
+                   {[40, 70, 45, 90, 65, 30, 80].map((h, i) => (
+                     <div key={i} className="flex-1 bg-emerald-100 rounded-t-sm transition-all duration-500 group-hover:bg-emerald-200" style={{ height: `${h}%` }}></div>
+                   ))}
+                 </div>
+                 <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none"></div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Floating Widget Mockup */}
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.4 }}
+            className="absolute bottom-6 right-6 w-72 z-50 bg-white rounded-xl shadow-[0_12px_40px_rgb(0,0,0,0.12)] border border-gray-100 p-4 transform transition-transform hover:-translate-y-1 hover:shadow-[0_16px_50px_rgb(0,0,0,0.16)] duration-300"
+          >
+            {isSubmitted ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="py-6 text-center"
+              >
+                <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xl mx-auto mb-3">✓</div>
+                <p className="font-semibold text-gray-900">Thanks for the feedback!</p>
+              </motion.div>
+            ) : (
+              <>
+                <p className="text-sm font-semibold text-gray-800 mb-3 text-center">Was this page helpful?</p>
+                <div className="flex justify-center gap-3 mb-4">
+                  <button 
+                    onClick={() => setSelectedRating(1)}
+                    className={`w-12 h-12 rounded-full border transition-all flex items-center justify-center text-2xl duration-200 ${selectedRating === 1 ? 'bg-emerald-100 border-emerald-300 ring-2 ring-emerald-500 ring-offset-2 scale-110' : 'bg-gray-50 border-gray-100 hover:bg-gray-100'}`}
+                  >😞</button>
+                  <button 
+                    onClick={() => setSelectedRating(2)}
+                    className={`w-12 h-12 rounded-full border transition-all flex items-center justify-center text-2xl duration-200 ${selectedRating === 2 ? 'bg-emerald-100 border-emerald-300 ring-2 ring-emerald-500 ring-offset-2 scale-110' : 'bg-gray-50 border-gray-100 hover:bg-gray-100'}`}
+                  >😐</button>
+                  <button 
+                    onClick={() => setSelectedRating(3)}
+                    className={`w-12 h-12 rounded-full border transition-all flex items-center justify-center text-2xl duration-200 ${selectedRating === 3 ? 'bg-emerald-100 border-emerald-300 ring-2 ring-emerald-500 ring-offset-2 scale-110' : 'bg-gray-50 border-gray-100 hover:bg-gray-100'}`}
+                  >🤩</button>
+                </div>
+                {selectedRating !== null && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="overflow-hidden">
+                    <input type="text" placeholder="What could be better? (optional)" className="w-full text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mb-3 text-gray-600 outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all" />
+                    <button onClick={() => setIsSubmitted(true)} className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg py-2 text-sm font-medium transition-colors active:scale-95 duration-150">Send feedback</button>
+                  </motion.div>
+                )}
+              </>
+            )}
+          </motion.div>
+        </div>
+      </motion.div>
       </div>
     </section>
   );

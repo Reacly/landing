@@ -1,32 +1,56 @@
 'use client';
 
 import { motion } from 'motion/react';
+import Link from 'next/link';
+import { usePostHog } from 'posthog-js/react';
 
 export default function Pricing() {
+  const posthog = usePostHog();
   const plans = [
     {
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      features: ['1 website', '50 responses / month', 'Branded widget', '7-day history'],
-      cta: 'Get started',
-      highlight: false
+      "name": "Free",
+      "price": "$0",
+      "period": "forever",
+      "features": [
+        "1 website",
+        "50 responses / month",
+        "Insights & trends",
+        "Branded widget"
+      ],
+      "cta": "Get started",
+      "highlight": false
     },
     {
-      name: 'Starter',
-      price: '$4',
-      period: 'per month',
-      features: ['1 website', 'Unlimited responses', 'Remove branding', 'Full history', 'Export data'],
-      cta: 'Get started',
-      highlight: true
+      "name": "Starter",
+      "price": "$7",
+      "period": "per month",
+      "features": [
+        "1 website",
+        "Unlimited responses",
+        "Insights & trends",
+        "Custom questions",
+        "Remove branding",
+        "Full history"
+      ],
+      "cta": "Get started",
+      "highlight": true
     },
     {
-      name: 'Pro',
-      price: '$9',
-      period: 'per month',
-      features: ['Up to 5 websites', 'Unlimited responses', 'Remove branding', 'Slack notifications', 'Custom questions'],
-      cta: 'Get started',
-      highlight: false
+      "name": "Pro",
+      "price": "$15",
+      "period": "per month",
+      "features": [
+        "Up to 5 websites",
+        "Unlimited responses",
+        "Insights & trends",
+        "Custom questions",
+        "Remove branding",
+        "Full history",
+        "AI Digest",
+        "Slack notifications"
+      ],
+      "cta": "Get started",
+      "highlight": false
     }
   ];
 
@@ -40,8 +64,8 @@ export default function Pricing() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight">Simple, honest pricing</h2>
-          <p className="text-lg text-gray-600">Start for free. Upgrade when you need more power.</p>
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 tracking-tight">Simple, honest pricing</h2>
+          <p className="text-xl text-gray-600">Start for free. Upgrade when you need more power.</p>
         </motion.div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
@@ -52,10 +76,10 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.15 }}
-              className={`flex flex-col relative bg-white rounded-xl transition-transform hover:-translate-y-2 duration-300 ${
+              className={`flex flex-col relative bg-white rounded-xl transition-all duration-300 ${
                 plan.highlight 
-                  ? 'border-2 border-emerald-500 shadow-[0_8px_30px_rgb(16,185,129,0.12)]' 
-                  : 'border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
+                  ? 'border-2 border-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.2)] md:scale-105 z-10 hover:-translate-y-2' 
+                  : 'border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:-translate-y-2 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]'
               } p-8`}
             >
               {plan.highlight && (
@@ -83,15 +107,17 @@ export default function Pricing() {
                 ))}
               </ul>
               
-              <button 
-                className={`w-full py-3 px-4 rounded-lg font-medium transition-all active:scale-95 ${
+              <Link 
+                href={`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/sign-up`}
+                onClick={() => posthog?.capture('clicked_get_started', { location: 'pricing', plan: plan.name })}
+                className={`w-full py-3 px-4 rounded-lg font-medium transition-all active:scale-95 text-center block ${
                   plan.highlight 
                     ? 'bg-emerald-500 hover:bg-emerald-600 text-white hover:shadow-md' 
                     : 'bg-white hover:bg-gray-50 border border-gray-200 text-gray-900'
                 }`}
               >
                 {plan.cta}
-              </button>
+              </Link>
             </motion.div>
           ))}
         </div>
@@ -103,7 +129,7 @@ export default function Pricing() {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="text-center text-sm font-medium text-gray-500 mt-12"
         >
-          Cancel or change your plan at any time. Secure payment via Stripe.
+          Cancel or change your plan at any time.
         </motion.p>
       </div>
     </section>

@@ -4,9 +4,17 @@ import { motion } from 'motion/react';
 
 export default function WorksEverywhere() {
   const platforms = [
-    'Webflow', 'Framer', 'Next.js', 'React', 
-    'Vue', 'WordPress', 'Carrd', 'Wix', 
-    'Squarespace', 'Shopify', 'Plain HTML'
+    { name: 'Webflow', icon: 'webflow' },
+    { name: 'Framer', icon: 'framer' },
+    { name: 'Next.js', icon: 'nextdotjs' },
+    { name: 'React', icon: 'react' },
+    { name: 'Vue', icon: 'vuedotjs' },
+    { name: 'WordPress', icon: 'wordpress' },
+    { name: 'Carrd', icon: 'carrd' },
+    { name: 'Wix', icon: 'wix' },
+    { name: 'Squarespace', icon: 'squarespace' },
+    { name: 'Shopify', icon: 'shopify' },
+    { name: 'Plain HTML', icon: 'html5' }
   ];
 
   return (
@@ -31,25 +39,23 @@ export default function WorksEverywhere() {
           No npm install. No framework lock-in. If it renders HTML, Reacly works.
         </motion.p>
         
-        <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-          {platforms.map((platform, index) => (
-            <motion.div 
-              key={platform} 
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ 
-                duration: 0.4, 
-                delay: 0.2 + (index * 0.05),
-                type: "spring",
-                stiffness: 100
-              }}
-              whileHover={{ scale: 1.05 }}
-              className="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-full font-medium shadow-sm hover:border-emerald-300 hover:text-emerald-700 transition-colors cursor-default select-none"
-            >
-              {platform}
-            </motion.div>
-          ))}
+        <div className="relative w-full max-w-5xl mx-auto overflow-hidden">
+          {/* Gradient masks for smooth fade in/out at edges */}
+          <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-white to-transparent z-10"></div>
+          <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-white to-transparent z-10"></div>
+          
+          <div className="flex w-max animate-marquee py-4 hover:[animation-play-state:paused]">
+            {/* Double the array for seamless infinite scroll */}
+            {[...platforms, ...platforms].map((platform, index) => (
+              <div 
+                key={index} 
+                className="px-5 py-2.5 mx-3 bg-white border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] text-gray-700 rounded-full font-medium whitespace-nowrap transition-transform duration-300 hover:scale-105 hover:border-emerald-300 hover:text-emerald-600 hover:shadow-md cursor-default select-none flex items-center gap-2.5"
+              >
+                <img src={`https://cdn.simpleicons.org/${platform.icon}`} alt={`${platform.name} logo`} className="w-5 h-5 object-contain opacity-80 group-hover:opacity-100 transition-opacity" loading="lazy" />
+                {platform.name}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

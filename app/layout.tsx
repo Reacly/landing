@@ -1,19 +1,18 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Script from 'next/script';
-// @ts-ignore: Global CSS import type declarations are handled by Next.js
 import './globals.css';
+import { PostHogProvider } from './providers';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://reacly.io'),
   title: {
-    default: 'Reacly — Feedback widget for any website',
+    default: 'Reacly | The Best Website Feedback Widget',
     template: '%s | Reacly'
   },
-  description: 'Get real visitor feedback with one script tag. Collect ratings, understand your users, and improve your product. Works on Webflow, Framer, React, and more.',
-  keywords: ['feedback widget', 'website feedback', 'user feedback', 'customer satisfaction', 'NPS', 'SaaS', 'website analytics'],
+  description: 'Reacly is a powerful website feedback widget. Collect user feedback, identify UX issues, and improve your product with a simple on-page feedback form.',
+  keywords: ['website feedback widget', 'user feedback software', 'on-page feedback form', 'visual feedback tool for websites', 'collect user feedback on website', 'feedback widget for SaaS'],
   authors: [{ name: 'Reacly' }],
   creator: 'Reacly',
   openGraph: {
@@ -21,8 +20,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://reacly.io',
     siteName: 'Reacly',
-    title: 'Reacly — Feedback widget for any website',
-    description: 'Get real visitor feedback with one script tag. Collect ratings, understand your users, and improve your product.',
+    title: 'Reacly | The Best Website Feedback Widget',
+    description: 'Reacly is a powerful website feedback widget. Collect user feedback, identify UX issues, and improve your product.',
     images: [
       {
         url: 'https://reacly.io/og-image.jpg',
@@ -34,8 +33,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Reacly — Feedback widget for any website',
-    description: 'Get real visitor feedback with one script tag. Works on Webflow, Framer, React, and more.',
+    title: 'Reacly | The Best Website Feedback Widget',
+    description: 'Reacly is a powerful website feedback widget. Collect user feedback, identify UX issues, and improve your product.',
     creator: '@reacly',
     images: ['https://reacly.io/og-image.jpg'],
   },
@@ -59,6 +58,21 @@ export const viewport = {
   themeColor: '#10B981',
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Reacly',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  url: 'https://reacly.io',
+  description: 'Reacly is a powerful website feedback widget. Collect user feedback, identify UX issues, and improve your product with a simple on-page feedback form.',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD'
+  }
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -66,13 +80,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} scroll-smooth`}>
-      <body className="antialiased bg-white text-gray-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 min-h-screen flex flex-col" suppressHydrationWarning>
-        {children}
-        <Script
-          src="https://reacly-ui.vercel.app/widget.js"
-          data-site="b7270cdf-16f0-47e1-92a9-e833528472da"
-          strategy="afterInteractive"
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+      </head>
+      <body className="antialiased bg-white text-gray-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 min-h-screen flex flex-col" suppressHydrationWarning>
+        <PostHogProvider>
+          {children}
+        </PostHogProvider>
       </body>
     </html>
   );

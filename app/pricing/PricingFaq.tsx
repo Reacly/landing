@@ -3,38 +3,26 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
-export default function Faq() {
+export default function PricingFaq() {
   const faqs = [
     {
-      question: "Will Reacly slow down my website?",
-      answer: "No. The widget script is under 5KB, loads asynchronously, and never blocks your page render. Your Lighthouse score won't budge."
-    },
-    // {
-    //   question: "Does it work with Content Security Policy (CSP)?",
-    //   answer: "Yes. We provide the exact CSP directives to whitelist. Works with strict CSP setups."
-    // },
-    // {
-    //   question: "Where is visitor data stored? Is it GDPR compliant?",
-    //   answer: "All data is stored in EU-based servers. We don't use cookies, don't fingerprint visitors, and collect no personally identifiable information unless the visitor voluntarily submits their email."
-    // },
-    {
-      question: "Can I customize which fields appear in the widget?",
-      answer: "Yes. From your dashboard you can toggle on/off: emoji rating, text comment, NPS score, effort score, multiple choice, and contact email."
+      question: "Are there any hidden fees?",
+      answer: "No, what you see is what you pay. There are no setup fees, hidden charges, or surprises on your bill."
     },
     {
-      question: "What happens after I join the waitlist?",
-      answer: "You'll get a confirmation email. When we launch, waitlist members get first access and discount — no credit card needed now."
+      question: "Can I cancel my subscription anytime?",
+      answer: "Yes, you can cancel your subscription at any time right from your dashboard. Once cancelled, you will retain access until the end of your billing cycle."
     },
     {
-      question: "Do I need a developer to install this?",
-      answer: "No. You paste one script tag. If you can edit your website's HTML (or paste into Webflow/Framer/WordPress), you're good to go."
+      question: "What happens if I exceed my monthly feedback limit?",
+      answer: "We won't cut you off immediately. If you consistently exceed your plan's limits, we'll reach out to discuss upgrading to a tier that better suits your traffic volume."
     }
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-24 bg-gray-50/50 border-t border-gray-100 overflow-hidden">
+    <section className="py-24 bg-white overflow-hidden">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -43,7 +31,7 @@ export default function Faq() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">Frequently asked questions</h2>
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">Pricing FAQs</h2>
         </motion.div>
         
         <div className="space-y-4">

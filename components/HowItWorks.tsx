@@ -76,26 +76,31 @@ export default function HowItWorks() {
           <p className="text-gray-600 max-w-2xl text-lg">You don&apos;t need a developer to install Reacly. It&apos;s built for anyone to use.</p>
         </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {steps.map((step, index) => (
-            <motion.div 
-              key={index} 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: index * 0.15 }}
-              className="flex flex-col gap-6 group cursor-default"
-            >
-              <div className="h-40 rounded-xl bg-gray-100/50 p-4 border border-gray-200/50 flex flex-col justify-center relative overflow-hidden">
-                {step.visual}
-              </div>
-              <div className="pr-4">
-                <div className="text-xs font-bold font-mono tracking-widest text-emerald-600 mb-3 bg-emerald-50 inline-block px-2 py-1 rounded">STEP {step.number}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2 tracking-tight group-hover:text-emerald-500 transition-colors">{step.title}</h3>
-                <p className="text-gray-600 leading-relaxed text-sm">{step.description}</p>
-              </div>
-            </motion.div>
-          ))}
+        <div className="relative">
+          {/* Connecting Line (hidden on mobile) */}
+          <div className="hidden md:block absolute top-20 left-[15%] right-[15%] h-[2px] bg-gradient-to-r from-emerald-100 via-emerald-300 to-emerald-100 -z-10 opacity-50"></div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+            {steps.map((step, index) => (
+              <motion.div 
+                key={index} 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                className="flex flex-col gap-6 group cursor-default"
+              >
+                <div className="h-40 rounded-xl bg-white p-4 border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] flex flex-col justify-center relative overflow-hidden group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 group-hover:-translate-y-1">
+                  {step.visual}
+                </div>
+                <div className="pr-4">
+                  <div className="text-xs font-bold font-mono tracking-widest text-emerald-600 mb-3 bg-emerald-50 inline-block px-2 py-1 rounded">STEP {step.number}</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 tracking-tight group-hover:text-emerald-500 transition-colors">{step.title}</h3>
+                  <p className="text-gray-600 leading-relaxed text-sm">{step.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
